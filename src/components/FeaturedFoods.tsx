@@ -1,119 +1,138 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { useCartStore } from '@/store/cartStore';
-import { FOODS } from '@/constants/foods';
-import { motion } from 'framer-motion';
+import { useEffect, useMemo, useRef } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import { FEATURED_FOOD_IDS, FOODS } from '@/constants/foods';
+import { FoodCard } from '@/components/FoodCard';
+import { ParallaxFoodRibbon } from '@/components/ParallaxFoodRibbon';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const featuredRibbonIds = [
+  'pizza-margherita',
+  'burger-classic',
+  'asian-sushi',
+  'drink-berry',
+  'salad-quinoa',
+  'dessert-tiramisu',
+];
+
 export const FeaturedFoods = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { addItem } = useCartStore();
-  const featured = FOODS.slice(0, 3);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+
+  const featured = useMemo(
+    () =>
+      FEATURED_FOOD_IDS.map((id) => FOODS.find((food) => food.id === id)).filter(
+        (food): food is (typeof FOODS)[number] => Boolean(food)
+      ),
+    []
+  );
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (!sectionRef.current || !containerRef.current || reduceMotion) return;
 
-    const cards = ref.current.querySelectorAll('.food-card');
-    cards.forEach((card, i) => {
-      gsap.from(card, {
+    const context = gsap.context(() => {
+      gsap.to(containerRef.current, {
+        y: -34,
+        ease: 'none',
         scrollTrigger: {
-          trigger: card,
-          start: 'top 80%',
-          toggleActions: 'play none none none',
+          trigger: sectionRef.current,
+          start: 'top bottom',
+          end: 'bottom center',
+          scrub: 1.1,
         },
-        opacity: 0,
-        y: 50,
-        duration: 0.8,
-        delay: i * 0.2,
       });
-    });
-  }, []);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
+      gsap.to('.featured-glow', {
+        yPercent: -18,
+        scale: 1.08,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.4,
+        },
+      });
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6 },
-    },
-  };
+      gsap.to('.featured-food-ribbon', {
+        xPercent: -14,
+        yPercent: -16,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.25,
+        },
+      });
+
+      gsap.to('.featured-food-ribbon-reverse', {
+        xPercent: 12,
+        yPercent: 14,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.45,
+        },
+      });
+    }, sectionRef);
+
+    return () => context.revert();
+  }, [reduceMotion]);
 
   return (
-    <section ref={ref} className="py-20 px-4 bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
-      <div className="max-w-6xl mx-auto">
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-gradient-to-b from-white to-gray-50 px-4 py-20 dark:from-gray-950 dark:to-gray-900 sm:py-24"
+    >
+      <div className="featured-glow pointer-events-none absolute inset-x-0 top-10 mx-auto h-80 max-w-5xl rounded-full bg-gradient-to-r from-orange-300/20 via-red-300/20 to-amber-200/20 blur-3xl dark:from-orange-500/10 dark:via-red-500/10 dark:to-amber-500/10" />
+      <div className="pointer-events-none absolute inset-0 hidden overflow-hidden lg:block" aria-hidden="true">
+        <ParallaxFoodRibbon
+          ids={featuredRibbonIds}
+          className="featured-food-ribbon absolute -left-20 top-12 -rotate-3 opacity-20"
+          itemClassName="h-24 w-24 rounded-2xl"
+          imageClassName="saturate-125"
+        />
+        <ParallaxFoodRibbon
+          ids={featuredRibbonIds}
+          reverse
+          className="featured-food-ribbon-reverse absolute -right-20 bottom-12 rotate-3 opacity-[0.16]"
+          itemClassName="h-20 w-20 rounded-xl"
+          imageClassName="saturate-125"
+        />
+      </div>
+
+      <div ref={containerRef} className="relative z-10 mx-auto max-w-6xl">
         <motion.div
-          className="text-center mb-12"
+          className="mx-auto mb-12 max-w-3xl text-center"
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-            Featured Foods
+          <span className="mb-4 inline-flex rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-xs font-black uppercase tracking-[0.28em] text-orange-700 dark:border-orange-500/20 dark:bg-orange-500/10 dark:text-orange-300">
+            Featured
+          </span>
+          <h2 className="mb-4 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-4xl font-black tracking-normal text-transparent md:text-5xl">
+            Signature dishes with real momentum
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 text-lg">
-            Handpicked delicious dishes just for you
+          <p className="text-lg leading-8 text-gray-600 dark:text-gray-400">
+            The most ordered plates this week, tuned for fast checkout and fresh delivery.
           </p>
         </motion.div>
 
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {featured.map((food) => (
-            <motion.div
-              key={food.id}
-              className="food-card bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group"
-              variants={itemVariants}
-              whileHover={{ y: -10 }}
-            >
-              <div className="relative h-64 bg-gradient-to-br from-orange-100 to-red-100 dark:from-orange-900 dark:to-red-900 flex items-center justify-center overflow-hidden">
-                <motion.div
-                  className="text-8xl"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
-                >
-                  {food.image}
-                </motion.div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">{food.name}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  {food.description}
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-bold text-orange-600">
-                    ${food.price}
-                  </span>
-                  <motion.button
-                    onClick={() => addItem(food)}
-                    className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Add
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {featured.map((food, index) => (
+            <FoodCard key={food.id} food={food} index={index} priority={index === 0} compact />
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

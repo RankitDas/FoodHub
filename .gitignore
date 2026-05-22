@@ -9,6 +9,7 @@
 # next.js
 /.next/
 /out/
+*.tsbuildinfo
 
 # production
 /build
@@ -21,6 +22,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
+*.err
+.chrome-verify/
 
 # local env files
 .env*.local

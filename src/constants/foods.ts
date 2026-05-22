@@ -1,67 +1,357 @@
+export type MenuCategory =
+  | 'Pizza'
+  | 'Burgers'
+  | 'Salads'
+  | 'Asian'
+  | 'Drinks'
+  | 'Desserts';
+
+export type CategoryFilter = 'All' | MenuCategory;
+
 export interface Food {
   id: string;
   name: string;
   price: number;
-  category: string;
+  category: MenuCategory;
   image: string;
+  imageAlt: string;
   description: string;
   rating: number;
+  calories: number;
+  tags: string[];
 }
 
-export const FOODS: Food[] = [
-  // PIZZA
-  { id: '1', name: 'Margherita Pizza', price: 12.99, category: 'Pizza', image: '🍕', description: 'Classic pizza with fresh mozzarella and basil', rating: 4.8 },
-  { id: '2', name: 'Pepperoni Pizza', price: 13.99, category: 'Pizza', image: '🍕', description: 'Loaded with pepperoni and mozzarella', rating: 4.9 },
-  { id: '3', name: 'Veggie Supreme', price: 11.99, category: 'Pizza', image: '🍕', description: 'Mixed fresh vegetables on thin crust', rating: 4.6 },
-  { id: '4', name: 'BBQ Chicken Pizza', price: 14.99, category: 'Pizza', image: '🍕', description: 'Smoky BBQ chicken with cheese', rating: 4.7 },
-  
-  // BURGERS
-  { id: '5', name: 'Burger Deluxe', price: 10.99, category: 'Burgers', image: '🍔', description: 'Grilled beef patty with fresh vegetables', rating: 4.8 },
-  { id: '6', name: 'Bacon Burger', price: 11.99, category: 'Burgers', image: '🍔', description: 'Crispy bacon with cheddar and lettuce', rating: 4.9 },
-  { id: '7', name: 'Mushroom Swiss', price: 12.49, category: 'Burgers', image: '🍔', description: 'Sautéed mushrooms with Swiss cheese', rating: 4.7 },
-  { id: '8', name: 'Spicy Jalapeño', price: 11.49, category: 'Burgers', image: '🍔', description: 'Hot jalapeños with pepper jack cheese', rating: 4.6 },
-  
-  // SALADS
-  { id: '9', name: 'Caesar Salad', price: 8.99, category: 'Salads', image: '🥗', description: 'Fresh greens with parmesan and croutons', rating: 4.5 },
-  { id: '10', name: 'Greek Salad', price: 9.49, category: 'Salads', image: '🥗', description: 'Feta, olives, tomatoes and cucumber', rating: 4.7 },
-  { id: '11', name: 'Caprese Salad', price: 8.99, category: 'Salads', image: '🥗', description: 'Mozzarella, tomato, and basil', rating: 4.6 },
-  { id: '12', name: 'Garden Fresh', price: 7.99, category: 'Salads', image: '🥗', description: 'Seasonal mixed vegetables', rating: 4.4 },
-  
-  // ASIAN
-  { id: '13', name: 'Pad Thai', price: 9.99, category: 'Asian', image: '🍜', description: 'Stir-fried noodles with shrimp and vegetables', rating: 4.8 },
-  { id: '14', name: 'Sushi Roll', price: 11.99, category: 'Asian', image: '🍣', description: 'Fresh salmon and avocado roll', rating: 4.9 },
-  { id: '15', name: 'Ramen Deluxe', price: 10.99, category: 'Asian', image: '🍜', description: 'Rich broth with noodles and toppings', rating: 4.7 },
-  { id: '16', name: 'Fried Rice', price: 8.99, category: 'Asian', image: '🍚', description: 'Jasmine rice with vegetables and egg', rating: 4.6 },
-  
-  // DRINKS
-  { id: '17', name: 'Fresh Orange Juice', price: 4.99, category: 'Drinks', image: '🧃', description: 'Freshly squeezed orange juice', rating: 4.7 },
-  { id: '18', name: 'Iced Coffee', price: 5.49, category: 'Drinks', image: '☕', description: 'Cold brew with ice and milk', rating: 4.8 },
-  { id: '19', name: 'Smoothie Bowl', price: 6.99, category: 'Drinks', image: '🥤', description: 'Berry smoothie with granola topping', rating: 4.6 },
-  { id: '20', name: 'Mango Lassi', price: 5.99, category: 'Drinks', image: '🧃', description: 'Traditional yogurt-based drink', rating: 4.7 },
-  
-  // DESSERTS
-  { id: '21', name: 'Chocolate Cake', price: 5.99, category: 'Desserts', image: '🍰', description: 'Rich chocolate cake with frosting', rating: 4.9 },
-  { id: '22', name: 'Cheesecake', price: 6.99, category: 'Desserts', image: '🍪', description: 'New York style cheesecake', rating: 4.8 },
-  { id: '23', name: 'Brownie Delight', price: 4.99, category: 'Desserts', image: '🍫', description: 'Fudgy chocolate brownie', rating: 4.7 },
-  { id: '24', name: 'Vanilla Tiramisu', price: 6.49, category: 'Desserts', image: '🍰', description: 'Classic Italian tiramisu', rating: 4.8 },
+export const CATEGORIES: CategoryFilter[] = [
+  'All',
+  'Pizza',
+  'Burgers',
+  'Salads',
+  'Asian',
+  'Drinks',
+  'Desserts',
 ];
 
-export const CATEGORIES = ['All', 'Pizza', 'Burgers', 'Salads', 'Asian', 'Drinks', 'Desserts'];
+export const CATEGORY_COPY: Record<CategoryFilter, string> = {
+  All: 'Chef-curated favorites across every craving.',
+  Pizza: 'Stone-fired pies with blistered crusts and bright toppings.',
+  Burgers: 'Stacked, juicy signatures with premium buns and sauces.',
+  Salads: 'Crisp bowls built with fresh greens, grains, and herbs.',
+  Asian: 'Noodles, sushi, and rice bowls with deep umami flavor.',
+  Drinks: 'Fresh pours, cold brews, and bright fruit blends.',
+  Desserts: 'Small-batch sweets for the perfect final bite.',
+};
+
+export const FOODS: Food[] = [
+  {
+    id: 'pizza-margherita',
+    name: 'Basil Margherita',
+    price: 13.95,
+    category: 'Pizza',
+    image: '/foods/pizza-margherita.png',
+    imageAlt: 'Margherita pizza with basil and melted mozzarella',
+    description: 'San Marzano tomato, fresh mozzarella, basil oil, and sea salt.',
+    rating: 4.9,
+    calories: 610,
+    tags: ['Vegetarian', 'Stone-fired'],
+  },
+  {
+    id: 'pizza-pepperoni',
+    name: 'Cup Pepperoni',
+    price: 15.5,
+    category: 'Pizza',
+    image: '/foods/pizza-pepperoni.png',
+    imageAlt: 'Pepperoni pizza on a rustic table',
+    description: 'Crisped pepperoni cups, aged mozzarella, oregano, and chili honey.',
+    rating: 4.8,
+    calories: 740,
+    tags: ['Spicy', 'Popular'],
+  },
+  {
+    id: 'pizza-truffle',
+    name: 'Truffle Mushroom',
+    price: 16.75,
+    category: 'Pizza',
+    image: '/foods/pizza-truffle.png',
+    imageAlt: 'Pizza topped with mushrooms and herbs',
+    description: 'Roasted mushrooms, fontina, garlic cream, and black truffle finish.',
+    rating: 4.7,
+    calories: 690,
+    tags: ['Umami', 'Chef pick'],
+  },
+  {
+    id: 'pizza-bbq-chicken',
+    name: 'Smoked BBQ Chicken',
+    price: 17.25,
+    category: 'Pizza',
+    image: '/foods/pizza-bbq-chicken.png',
+    imageAlt: 'Golden pizza with grilled toppings',
+    description: 'Pulled chicken, smoked onions, cilantro, mozzarella, and BBQ glaze.',
+    rating: 4.8,
+    calories: 760,
+    tags: ['Smoky', 'Protein'],
+  },
+  {
+    id: 'burger-classic',
+    name: 'Prime Classic',
+    price: 12.95,
+    category: 'Burgers',
+    image: '/foods/burger-classic.png',
+    imageAlt: 'Classic cheeseburger with lettuce and tomato',
+    description: 'Prime beef, cheddar, crisp lettuce, tomato, pickles, and house sauce.',
+    rating: 4.9,
+    calories: 820,
+    tags: ['Best seller', 'Beef'],
+  },
+  {
+    id: 'burger-bacon',
+    name: 'Maple Bacon Stack',
+    price: 14.25,
+    category: 'Burgers',
+    image: '/foods/burger-bacon.png',
+    imageAlt: 'Burger with bacon and melted cheese',
+    description: 'Double cheddar, maple bacon, caramelized onion, and smoked aioli.',
+    rating: 4.8,
+    calories: 910,
+    tags: ['Smoky', 'Double cheese'],
+  },
+  {
+    id: 'burger-mushroom',
+    name: 'Mushroom Swiss Melt',
+    price: 13.75,
+    category: 'Burgers',
+    image: '/foods/burger-mushroom.png',
+    imageAlt: 'Burger with melted cheese and toasted bun',
+    description: 'Seared mushrooms, Swiss cheese, garlic mayo, and toasted brioche.',
+    rating: 4.7,
+    calories: 840,
+    tags: ['Umami', 'Brioche'],
+  },
+  {
+    id: 'burger-spicy',
+    name: 'Firehouse Jalapeno',
+    price: 13.5,
+    category: 'Burgers',
+    image: '/foods/burger-spicy.png',
+    imageAlt: 'Loaded burger with sauce and fresh toppings',
+    description: 'Pepper jack, roasted jalapeno, lettuce, tomato, and chipotle sauce.',
+    rating: 4.6,
+    calories: 790,
+    tags: ['Spicy', 'Pepper jack'],
+  },
+  {
+    id: 'salad-caesar',
+    name: 'Charred Caesar',
+    price: 10.95,
+    category: 'Salads',
+    image: '/foods/salad-caesar.png',
+    imageAlt: 'Caesar salad with greens and parmesan',
+    description: 'Romaine hearts, parmesan snow, sourdough crunch, and lemon dressing.',
+    rating: 4.7,
+    calories: 430,
+    tags: ['Crisp', 'Vegetarian'],
+  },
+  {
+    id: 'salad-greek',
+    name: 'Aegean Greek Bowl',
+    price: 11.5,
+    category: 'Salads',
+    image: '/foods/salad-greek.png',
+    imageAlt: 'Colorful Greek salad with vegetables and feta',
+    description: 'Feta, cucumber, tomato, olives, herbs, and oregano vinaigrette.',
+    rating: 4.8,
+    calories: 390,
+    tags: ['Fresh', 'Feta'],
+  },
+  {
+    id: 'salad-quinoa',
+    name: 'Harvest Quinoa',
+    price: 12.25,
+    category: 'Salads',
+    image: '/foods/salad-quinoa.png',
+    imageAlt: 'Healthy grain bowl with greens and vegetables',
+    description: 'Quinoa, avocado, roasted vegetables, pumpkin seeds, and citrus tahini.',
+    rating: 4.6,
+    calories: 520,
+    tags: ['Plant-forward', 'Grains'],
+  },
+  {
+    id: 'salad-caprese',
+    name: 'Heirloom Caprese',
+    price: 10.75,
+    category: 'Salads',
+    image: '/foods/salad-caprese.png',
+    imageAlt: 'Fresh salad with tomatoes, greens, and vegetables',
+    description: 'Heirloom tomato, mozzarella, basil, greens, and aged balsamic.',
+    rating: 4.7,
+    calories: 410,
+    tags: ['Seasonal', 'Vegetarian'],
+  },
+  {
+    id: 'asian-ramen',
+    name: 'Tonkotsu Ramen',
+    price: 14.95,
+    category: 'Asian',
+    image: '/foods/asian-ramen.png',
+    imageAlt: 'Bowl of ramen with egg and noodles',
+    description: 'Slow broth, spring noodles, soft egg, chashu, scallion, and chili oil.',
+    rating: 4.9,
+    calories: 720,
+    tags: ['Comfort', 'Broth'],
+  },
+  {
+    id: 'asian-sushi',
+    name: 'Salmon Avocado Roll',
+    price: 13.75,
+    category: 'Asian',
+    image: '/foods/asian-sushi.png',
+    imageAlt: 'Assorted sushi rolls on a platter',
+    description: 'Fresh salmon, avocado, cucumber, nori, sushi rice, and sesame.',
+    rating: 4.8,
+    calories: 480,
+    tags: ['Fresh', 'Sushi'],
+  },
+  {
+    id: 'asian-pad-thai',
+    name: 'Tamarind Pad Thai',
+    price: 12.95,
+    category: 'Asian',
+    image: '/foods/asian-pad-thai.png',
+    imageAlt: 'Asian noodle dish in a bowl',
+    description: 'Rice noodles, shrimp, tamarind, peanuts, bean sprouts, and lime.',
+    rating: 4.7,
+    calories: 650,
+    tags: ['Noodles', 'Tangy'],
+  },
+  {
+    id: 'asian-rice-bowl',
+    name: 'Korean Rice Bowl',
+    price: 13.25,
+    category: 'Asian',
+    image: '/foods/asian-rice-bowl.png',
+    imageAlt: 'Asian dumplings and rice bowl spread',
+    description: 'Garlic rice, marinated beef, kimchi, cucumber, egg, and gochujang.',
+    rating: 4.8,
+    calories: 690,
+    tags: ['Savory', 'Gochujang'],
+  },
+  {
+    id: 'drink-orange',
+    name: 'Pressed Citrus Cooler',
+    price: 5.25,
+    category: 'Drinks',
+    image: '/foods/drink-orange.png',
+    imageAlt: 'Fresh citrus drink with ice',
+    description: 'Orange, grapefruit, lemon, mint, and sparkling water over ice.',
+    rating: 4.7,
+    calories: 140,
+    tags: ['Refreshing', 'Citrus'],
+  },
+  {
+    id: 'drink-cold-brew',
+    name: 'Vanilla Cold Brew',
+    price: 5.75,
+    category: 'Drinks',
+    image: '/foods/drink-cold-brew.png',
+    imageAlt: 'Iced coffee in a glass',
+    description: 'Slow-steeped coffee, vanilla, milk foam, and a clean finish.',
+    rating: 4.8,
+    calories: 190,
+    tags: ['Cold brew', 'Caffeinated'],
+  },
+  {
+    id: 'drink-berry',
+    name: 'Berry Protein Smoothie',
+    price: 6.95,
+    category: 'Drinks',
+    image: '/foods/drink-berry.png',
+    imageAlt: 'Berry smoothie with fruit toppings',
+    description: 'Strawberry, blueberry, banana, oat milk, and vanilla protein.',
+    rating: 4.6,
+    calories: 330,
+    tags: ['Protein', 'Berry'],
+  },
+  {
+    id: 'drink-mango',
+    name: 'Mango Lassi',
+    price: 5.95,
+    category: 'Drinks',
+    image: '/foods/drink-mango.png',
+    imageAlt: 'Mango drink in a glass with fruit',
+    description: 'Mango, yogurt, cardamom, honey, and a chilled creamy texture.',
+    rating: 4.7,
+    calories: 280,
+    tags: ['Creamy', 'Mango'],
+  },
+  {
+    id: 'dessert-chocolate',
+    name: 'Midnight Chocolate Cake',
+    price: 7.25,
+    category: 'Desserts',
+    image: '/foods/dessert-chocolate.png',
+    imageAlt: 'Slice of chocolate layer cake',
+    description: 'Dark chocolate sponge, ganache, cocoa nibs, and vanilla cream.',
+    rating: 4.9,
+    calories: 560,
+    tags: ['Rich', 'Chocolate'],
+  },
+  {
+    id: 'dessert-cheesecake',
+    name: 'Burnt Basque Cheesecake',
+    price: 7.75,
+    category: 'Desserts',
+    image: '/foods/dessert-cheesecake.png',
+    imageAlt: 'Creamy cheesecake slice on a plate',
+    description: 'Caramelized top, creamy center, berry compote, and butter crumb.',
+    rating: 4.8,
+    calories: 510,
+    tags: ['Creamy', 'Berry'],
+  },
+  {
+    id: 'dessert-brownie',
+    name: 'Salted Brownie',
+    price: 6.25,
+    category: 'Desserts',
+    image: '/foods/dessert-brownie.png',
+    imageAlt: 'Chocolate brownie dessert with toppings',
+    description: 'Fudgy brownie, sea salt, chocolate sauce, and vanilla mascarpone.',
+    rating: 4.7,
+    calories: 490,
+    tags: ['Fudgy', 'Sea salt'],
+  },
+  {
+    id: 'dessert-tiramisu',
+    name: 'Espresso Tiramisu',
+    price: 7.5,
+    category: 'Desserts',
+    image: '/foods/dessert-tiramisu.png',
+    imageAlt: 'Elegant plated dessert with cream and berries',
+    description: 'Mascarpone, espresso-soaked layers, cocoa, and shaved chocolate.',
+    rating: 4.8,
+    calories: 450,
+    tags: ['Espresso', 'Italian'],
+  },
+];
+
+export const FEATURED_FOOD_IDS = [
+  'pizza-margherita',
+  'burger-classic',
+  'asian-ramen',
+];
 
 export const TESTIMONIALS = [
   {
     name: 'Sarah Johnson',
     rating: 5,
-    text: 'Best food delivery experience! Fast and delicious.',
+    text: 'The menu feels curated, checkout is quick, and every order has arrived hot.',
   },
   {
     name: 'Mike Chen',
     rating: 5,
-    text: 'Amazing variety of cuisines and great quality.',
+    text: 'Restaurant-level meals without the friction. The ramen and pizza are standouts.',
   },
   {
     name: 'Emma Davis',
     rating: 5,
-    text: 'Love the smooth ordering process and beautiful UI!',
+    text: 'Beautiful ordering experience, fast delivery, and the food looks exactly like the photos.',
   },
 ];
